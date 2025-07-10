@@ -12,7 +12,6 @@ ScreenQnA is a tiny desktop utility that lets you *snap* any part of your screen
 * Query OpenAI ChatCompletion to get concise answers.
 * Skip already-answered questions to avoid duplicate costs.
 
-
 ## Installation (A-Z)
 1. **Install Python 3.10+**
    • Download from <https://python.org> and tick “Add Python to PATH” during setup.
@@ -49,17 +48,27 @@ ScreenQnA is a tiny desktop utility that lets you *snap* any part of your screen
    pip install -r requirements.txt
    ```
 
-6. **Set your OpenAI key** (never commit it!)
-   ```powershell
-   copy .env.example .env
-   notepad .env     # paste your key
-   # file contents:
-   # OPENAI_API_KEY=sk-...
+6. **Configure OpenAI credentials** (never commit them!)
+
+   Create a `.env` file in the project root – the app loads it automatically via `python-dotenv`:
+
+   ```env
+   # Normal user key (simplest)
+   OPENAI_API_KEY=sk-...
+
+   # --- OR ---
+   # Service-account / project key
+   OPENAI_API_KEY=sk-svcacct-...
+   OPENAI_ORG_ID=org_...
+
+   # OPTIONAL – only if you need to override the default project baked into the key
+   # OPENAI_PROJECT_ID=proj_...
    ```
-   Alternatively:
+
+   Alternatively, export variables in the terminal (session-only):
    ```powershell
-   setx OPENAI_API_KEY "sk-..."   # permanent for the current user
-   $env:OPENAI_API_KEY="sk-..."    # current-session only
+   $env:OPENAI_API_KEY="sk-..."
+   $env:OPENAI_ORG_ID="org_..."   # only for svcacct keys
    ```
 
 ## Usage
@@ -106,4 +115,5 @@ The script scans automatically and prints Q ➜ A pairs until you press **Ctrl +
 
 ---
 Need help? Run any script with `-h` to see all options.
+
 
