@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import os
 import argparse
+import traceback
 import re
 from typing import Optional
 import threading
@@ -59,7 +60,14 @@ def query_openai(prompt: str, model: str = "gpt-3.5-turbo") -> str:
         raise RuntimeError("OPENAI_API_KEY environment variable not set.")
 
     try:
-        client = openai.OpenAI(api_key=api_key)
+        org_id = os.getenv("OPENAI_ORG_ID")
+        project_id = os.getenv("OPENAI_PROJECT_ID")
+        client_kwargs = {"api_key": api_key}
+        if org_id:
+            client_kwargs["organization"] = org_id
+        if project_id:
+            client_kwargs["project"] = project_id
+        client = openai.OpenAI(**client_kwargs)
         response = client.chat.completions.create(
             model=model,
             messages=[
@@ -69,6 +77,9 @@ def query_openai(prompt: str, model: str = "gpt-3.5-turbo") -> str:
             temperature=0.2,
         )
         return response.choices[0].message.content.strip()
+    except openai.AuthenticationError as e:
+        # Provide a clearer error when the API key is invalid or missing permissions
+        raise RuntimeError("OpenAI authentication failed. Please verify that your OPENAI_API_KEY is correct and active.") from e
     except AttributeError:
         # openai<1.0 fallback
         openai.api_key = api_key
@@ -201,13 +212,14 @@ def run_ocr_and_answer(root: tk.Tk, bbox: Tuple[int, int, int, int], ui_text: tk
         ui_text.after(0, lambda: root.clipboard_append(formatted))
         ui(messagebox.showinfo, "AI Answer", answer)
     except Exception as e:
+        traceback.print_exc()
         ui(messagebox.showerror, "Error", str(e))
     finally:
         ui(lambda: button.config(state=tk.NORMAL))
 
 
 def main():
-    load_dotenv()
+    load_dotenv(override=True)
     root = tk.Tk()
     root.title("Screen QnA GUI")
     root.geometry("600x400")
