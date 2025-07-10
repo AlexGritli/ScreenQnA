@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="600" height="425" alt="Design sans titre (31)"
+       src="https://github.com/user-attachments/assets/e5d30189-7d8d-4ea7-9689-11e9f80ea15d" />
+</p>
 # ScreenQnA
 
 ScreenQnA is a tiny desktop utility that lets you *snap* any part of your screen and instantly receive an AI-generated answer to the question you highlighted.
@@ -7,6 +11,7 @@ ScreenQnA is a tiny desktop utility that lets you *snap* any part of your screen
 * Detect sentences ending with a question mark.
 * Query OpenAI ChatCompletion to get concise answers.
 * Skip already-answered questions to avoid duplicate costs.
+
 
 ## Installation (A-Z)
 1. **Install Python 3.10+**
